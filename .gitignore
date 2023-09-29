@@ -1,0 +1,5 @@
+.env
+.node_modules
+ui/node_modules
+ui/copyshare/.env
+ui/copyshare/.gitignore
