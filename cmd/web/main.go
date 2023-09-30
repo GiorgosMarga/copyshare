@@ -2,22 +2,19 @@ package main
 
 import (
 	"log"
-	"os"
-
-	"github.com/joho/godotenv"
 )
 
-func init() {
-	err := godotenv.Load(".env")
+// func init() {
+// 	err := godotenv.Load(".env")
 
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-}
+// 	if err != nil {
+// 		log.Fatal("Error loading .env file")
+// 	}
+// }
 
 func main() {
-	dsn := os.Getenv("DSN")
-	port := os.Getenv("PORT")
+	dsn := "pp2y8t0tscjkn1sw1wop:pscale_pw_1qn9J7sFP9bFBXG6VzaZWJ7JKnuLNJwaZCvmoZGVQ45@tcp(aws.connect.psdb.cloud)/copyshare?tls=true&interpolateParams=true&parseTime=true"
+	port := "3000"
 	db, err := newDB(dsn)
 	if err != nil {
 		errorLog.Fatal(err)
