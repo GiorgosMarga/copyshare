@@ -14,7 +14,7 @@ import (
 // }
 
 func main() {
-	dsn := "pp2y8t0tscjkn1sw1wop:pscale_pw_1qn9J7sFP9bFBXG6VzaZWJ7JKnuLNJwaZCvmoZGVQ45@tcp(aws.connect.psdb.cloud)/copyshare?tls=true&interpolateParams=true&parseTime=true"
+	dsn := os.Getenv("DSN")
 	port := os.Getenv("PORT")
 	db, err := newDB(dsn)
 	if err != nil {
