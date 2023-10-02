@@ -179,3 +179,17 @@ func (app *Application) Logout(w http.ResponseWriter, r *http.Request) {
 	}
 	app.sessionManager.Remove(r.Context(), "user")
 }
+
+func (app *Application) WhoAmI(w http.ResponseWriter, r *http.Request) {
+	id := app.sessionManager.GetInt(r.Context(), "user")
+	username, err := app.user.WhoAmI(id)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecond) {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		app.serverError(w, err)
+		return
+	}
+	w.Write([]byte(`{"username": "` + username + "\"}"))
+}

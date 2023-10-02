@@ -20,6 +20,8 @@ func (app *Application) routes() http.Handler {
 	router.Handler(http.MethodPost, "/snippet", http.HandlerFunc(app.CreateSnippet))
 
 	// Auth
+	router.Handler(http.MethodGet, "/auth/whoAmI", withAuthChain.Then(http.HandlerFunc(app.WhoAmI)))
+
 	router.Handler(http.MethodPost, "/auth/login", http.HandlerFunc(app.Login))
 	router.Handler(http.MethodPost, "/auth/register", http.HandlerFunc(app.Register))
 	router.Handler(http.MethodPost, "/auth/logout", http.HandlerFunc(app.Logout))

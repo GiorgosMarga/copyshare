@@ -31,8 +31,10 @@ const CreateSnippet = () => {
     }
 
     const onSubmitHandler = async (e) => {
+
         e.preventDefault()
         resetErrors()
+
         setLoading(true)
         const res = await fetch(`${import.meta.env.VITE_BASE_SERVER_URL}/snippet`, {
             method: "POST",

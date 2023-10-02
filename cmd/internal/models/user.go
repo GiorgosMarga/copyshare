@@ -67,3 +67,17 @@ func (u *UserModel) Exists(id int) (bool, error) {
 	err := u.DB.QueryRow(stmt, id).Scan(&exists)
 	return exists, err
 }
+
+func (u *UserModel) WhoAmI(id int) (string, error) {
+	var username string
+	stmt := "SELECT username FROM user WHERE id=?"
+	err := u.DB.QueryRow(stmt, id).Scan(&username)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return "", ErrNoRecond
+		}
+		return "", err
+	}
+	return username, nil
+
+}
