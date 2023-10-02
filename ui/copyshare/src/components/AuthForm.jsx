@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Modal from 'react-modal';
 import BounceLoader from "react-spinners/BounceLoader";
 import FormInput from './FormInput';
-const AuthForm = ({ isOpen, toggleModal }) => {
+const AuthForm = ({ isOpen, setUser, toggleModal }) => {
     const [isLogin, setIsLogin] = useState(true)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -66,12 +66,15 @@ const AuthForm = ({ isOpen, toggleModal }) => {
                 },
                 body: JSON.stringify({ "email": email, "password": password })
             })
+            const bd = await res.json()
             if (res && res.status !== 200) {
-                let errs = await res.json()
-                setErrors(errs)
+                setErrors(bd)
                 setLoading(false)
                 return
             }
+            setUser(bd.username)
+            toggleModal()
+
             resetForm()
         } else {
             if (confirmPassword !== password) {
@@ -87,12 +90,15 @@ const AuthForm = ({ isOpen, toggleModal }) => {
                 },
                 body: JSON.stringify({ "email": email, "password": password, "username": username })
             })
+            const bd = await res.json()
             if (res && res.status !== 201) {
-                let errs = await res.json()
-                setErrors(errs)
+                setErrors(bd)
                 setLoading(false)
                 return
             }
+            console.log(bd)
+            setUsername(bd.username)
+            toggleModal()
             resetForm()
         }
         setLoading(false)

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import NavBar from './components/NavBar'
 import AuthForm from './components/AuthForm';
 import CreateSnippet from './components/CreateSnippet';
@@ -11,13 +11,32 @@ import SnippetList from './components/SnippetList';
 
 function App() {
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [username, setUser] = useState("");
+
+  useEffect(() => {
+    async function whoAmI() {
+      try {
+        // Perform asynchronous operations here (e.g., fetch data)
+        const response = await fetch(`${import.meta.env.VITE_BASE_SERVER_URL}/auth/whoAmI`, {
+          credentials: 'include'
+        });
+        const data = await response.json();
+        setUser(data.username)
+      } catch (error) {
+        // Handle errors
+        console.error('Error fetching data:', error);
+      }
+    }
+    whoAmI();
+  }, [])
+
 
   const toggleModal = () => {
     setIsOpen(prevState => !prevState);
   }
   return <div className='relative bg-[#176B87] w-screen h-screen flex flex-col items-center justify-center text-[#EEEEEE]'>
-    <NavBar toggleModal={toggleModal} />
-    <AuthForm isOpen={modalIsOpen} toggleModal={toggleModal} />
+    <NavBar toggleModal={toggleModal} username={username} />
+    <AuthForm isOpen={modalIsOpen} toggleModal={toggleModal} setUser={setUser} />
     <Routes>
       <Route element={<CreateSnippet />} exact path="" />
       <Route path='/:id' exact element={<Snippet />} />
