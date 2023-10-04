@@ -13,7 +13,8 @@ const AuthForm = ({ isOpen, setUser, toggleModal }) => {
         password: "",
         email: "",
         confirmPassword: "",
-        username: ""
+        username: "",
+        general: ""
     })
 
     const resetErrors = () => {
@@ -21,7 +22,8 @@ const AuthForm = ({ isOpen, setUser, toggleModal }) => {
             password: "",
             email: "",
             confirmPassword: "",
-            username: ""
+            username: "",
+            general: ""
         })
     }
 
@@ -55,51 +57,65 @@ const AuthForm = ({ isOpen, setUser, toggleModal }) => {
         e.preventDefault()
         setLoading(true)
         resetErrors()
-
         let res
         if (isLogin) {
-            res = await fetch(`${import.meta.env.VITE_BASE_SERVER_URL}/auth/login`, {
-                "method": "POST",
-                "headers": {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ "email": email, "password": password })
-            })
-            const bd = await res.json()
-            if (res && res.status !== 200) {
-                setErrors(bd)
+            try {
+                res = await fetch(`${import.meta.env.VITE_BASE_SERVER_URL}/auth/login`, {
+                    "method": "POST",
+                    "headers": {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ "email": email, "password": password })
+                })
+                const bd = await res.json()
+                if (res && res.status !== 200) {
+                    setErrors(bd)
+                    setLoading(false)
+                    return
+                }
+                setUser(bd.username)
+                toggleModal()
+                resetForm()
+            } catch (err) {
                 setLoading(false)
-                return
+                setErrors({
+                    general: "Internal server error. Please try again later."
+                })
             }
-            setUser(bd.username)
-            toggleModal()
 
-            resetForm()
         } else {
             if (confirmPassword !== password) {
                 setErrors(prevState => Object.assign({}, prevState, { confirmPassword: "passwords don't match" }))
                 setLoading(false)
                 return
             }
-            res = await fetch(`${import.meta.env.VITE_BASE_SERVER_URL}/auth/register`, {
-                "method": "POST",
-                "headers": {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ "email": email, "password": password, "username": username })
-            })
-            const bd = await res.json()
-            if (res && res.status !== 201) {
-                setErrors(bd)
+            try {
+                res = await fetch(`${import.meta.env.VITE_BASE_SERVER_URL}/auth/register`, {
+                    "method": "POST",
+                    "headers": {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ "email": email, "password": password, "username": username })
+                })
+                const bd = await res.json()
+                if (res && res.status !== 201) {
+                    setErrors(bd)
+                    setLoading(false)
+                    return
+                }
+                console.log(bd)
+                setUsername(bd.username)
+                toggleModal()
+                resetForm()
+            } catch (error) {
+                setErrors({
+                    general: "Internal server error. Please try again later."
+                })
                 setLoading(false)
-                return
             }
-            console.log(bd)
-            setUsername(bd.username)
-            toggleModal()
-            resetForm()
+
         }
         setLoading(false)
 
@@ -107,6 +123,8 @@ const AuthForm = ({ isOpen, setUser, toggleModal }) => {
     return (
 
         <Modal
+            shouldCloseOnOverlayClick={true}
+            onRequestClose={toggleModal}
             isOpen={isOpen}
             contentLabel="Example Modal"
             className="relative text-[#EEEEEE] bg-[#176B87] flex flex-col justify-center items-center h-[70%] w-[70%] rounded-xl shadow-xl p-10 outline-none"
@@ -123,6 +141,8 @@ const AuthForm = ({ isOpen, setUser, toggleModal }) => {
 
 
                 <p onClick={toggleLogin} className='text-xs font-thin pt-1 cursor-pointer pl-2'>{isLogin ? "Don't have an account? Register" : "Already have an account? Login"}</p>
+                {errors.general.length != 0 ? <p className='pl-1 text-red-700 text-xs font-bold'>{errors.general}</p> : null}
+
                 {loading === false ? <div className='self-center pt-5 '>
                     <button onClick={onClickHandler} className='py-1 px-7 bg-[#053B50]/70 rounded-xl  text-[#EEEEEE] '>{isLogin ? "Login" : "Register"}</button>
                 </div> : <div className=' flex justify-center'>

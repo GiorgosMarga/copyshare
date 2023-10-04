@@ -35,7 +35,7 @@ function App() {
     setIsOpen(prevState => !prevState);
   }
   return <div className='relative bg-[#176B87] w-screen h-screen flex flex-col items-center justify-center text-[#EEEEEE]'>
-    <NavBar toggleModal={toggleModal} username={username} />
+    <NavBar toggleModal={toggleModal} username={username} setUsername={setUser} />
     <AuthForm isOpen={modalIsOpen} toggleModal={toggleModal} setUser={setUser} />
     <Routes>
       <Route element={<CreateSnippet />} exact path="" />

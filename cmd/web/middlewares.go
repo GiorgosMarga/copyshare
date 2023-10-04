@@ -75,7 +75,7 @@ func (app *Application) addJsonHeader(next http.Handler) http.Handler {
 
 func (app *Application) cors(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5174")
+		// w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173") //for dev
 
 		w.Header().Set("Access-Control-Allow-Origin", "https://fierce-fjord-43542-5b65374c8907.herokuapp.com")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")

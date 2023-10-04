@@ -24,7 +24,7 @@ func (app *Application) routes() http.Handler {
 
 	router.Handler(http.MethodPost, "/auth/login", http.HandlerFunc(app.Login))
 	router.Handler(http.MethodPost, "/auth/register", http.HandlerFunc(app.Register))
-	router.Handler(http.MethodPost, "/auth/logout", http.HandlerFunc(app.Logout))
+	router.Handler(http.MethodGet, "/auth/logout", http.HandlerFunc(app.Logout))
 
 	return mainChain.Then(router)
 }
